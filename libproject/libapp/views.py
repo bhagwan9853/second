@@ -196,8 +196,11 @@ def signup(request):
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
-            login(request, user)
-            return redirect('books/')
+            if user is not None:
+                login(request, user)
+                return HttpResponseRedirect('index')
+            else:
+                return render(request,'admin.html',{'form':form})
     else:
         form = UserForm()
     return render(request, 'admin.html', {'form': form})
